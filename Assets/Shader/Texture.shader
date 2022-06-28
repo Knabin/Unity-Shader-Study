@@ -1,20 +1,15 @@
-// 셰이더의 이름
-Shader "Custom/Hello"
+Shader "Custom/Texture"
 {
     Properties
     {
-        fR("Red", Range(0, 1)) = 1.0
-        fG("Green", Range(0, 1)) = 0.0
-        fB("Blue", Range(0, 1)) = 0.0
+        _MainTex ("Albedo (RGB)", 2D) = "white" {}
     }
     SubShader
     {
         Tags { "RenderType"="Opaque" }
-        LOD 200
 
         CGPROGRAM
         #pragma surface surf Standard fullforwardshadows
-        #pragma target 3.0
 
         sampler2D _MainTex;
 
@@ -23,16 +18,11 @@ Shader "Custom/Hello"
             float2 uv_MainTex;
         };
 
-        float fR;
-        float fG;
-        float fB;
-
-        UNITY_INSTANCING_BUFFER_START(Props)
-        UNITY_INSTANCING_BUFFER_END(Props)
-
         void surf (Input IN, inout SurfaceOutputStandard o)
         {
-            o.Emission = float3(fR, fG, fB);
+            fixed4 c = tex2D (_MainTex, IN.uv_MainTex);
+            //o.Albedo = c.rgb;
+            o.Emission = c.rgb;
         }
         ENDCG
     }
